@@ -69,6 +69,7 @@ wb_data_clean <- wb_indicators_long %>%
   dplyr::select(-year_chr, -'Country Code', -'Series Code') # This drops a few redundant columns (caution here...best to leave things if you're not sure), dont need country code becasue fine with naame but might want it, can select ranges, sequences of variabels but could ask exlue variables, negative implies remove, select is columns and filter is filter or exluding rows base don whether it attaches your ocnditions or not, dont need quatiations around year_chr because its already created and doesnt have spaces 
 
 head(wb_data_clean)
+view(wb_data_clean)
 ```
 
 ```{r}
@@ -86,15 +87,14 @@ That means we're going to need to widen this data. We'll do that using `tidyr::p
 ```{r}
 wb_data_tidy <- wb_data_clean %>% 
   tidyr::drop_na('Series Name') %>% #nothing to do with data being tidy, jsut any value missing a series you msut drop 
-  
   tidyr::pivot_wider(names_from = 'Series Name', values_from = indicator_value) %>% # Pivot to wide format
   dplyr::rename(county = "Country Name", 
                 access_fuels_pp = "Access to clean fuels and technologies for cooking (% of pop)",
                 acccess_electricity = "access to electricity",  
                 co2_emissions_kt = "CO2",
                 fossil_fuel_cons_pt = "fossil fuel consumption",
-                water_stress = "level of water stress")
-
+                water_stress = "level of water stress") %>%
+  dplyr::mutate(year = as.numeric(year))
 #independent of position, deosnt matter where they are, renaming col based on namess 
 
 
@@ -102,6 +102,12 @@ wb_data_tidy <- wb_data_clean %>%
 #not changing this based on position 
 
 view(wb_data_tidy)
+```
+
+```{r}
+ggplot(data = wb_data_clean, aes(x = year, y = co2_emissions_kt)) + 
+  geom_line(aes(colour = country)) + 
+  theme(legend.position = none )
 ```
 
 ## Those column names are a nightmare
