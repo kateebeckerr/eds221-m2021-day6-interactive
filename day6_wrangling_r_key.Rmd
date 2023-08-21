@@ -124,6 +124,10 @@ We can reassign all names as follows (in this order):
 
 Or, we'll learn how to use `dplyr::rename()` soon...
 
+-   new new
+
+-   
+
 # Part 2: More data wrangling with `dplyr`
 
 ## `dplyr::filter()`
